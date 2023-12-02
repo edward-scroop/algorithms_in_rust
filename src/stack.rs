@@ -3,6 +3,25 @@ pub struct Stack<T> {
     count: std::primitive::usize,
 }
 
+#[derive(Debug)]
+pub struct Error {
+    details: String,
+}
+
+impl Error {
+    pub fn new(msg: &str) -> Error {
+        Error {
+            details: msg.to_string(),
+        }
+    }
+}
+
+impl std::fmt::Display for Error {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.details)
+    }
+}
+
 impl<T> Stack<T> {
     pub fn new() -> Self {
         Stack {
@@ -20,9 +39,9 @@ impl<T> Stack<T> {
         self.count += 1;
     }
 
-    pub fn pop(&mut self) -> Result<T, std::io::Error> {
+    pub fn pop(&mut self) -> Result<T, Error> {
         if self.count == 0 {
-            Err(std::io::Error::new(std::io::ErrorKind::Other, "can not pop empty stack"))
+            Err(Error::new("can not pop empty stack"))
         } else {
             self.count -= 1;
             Ok(self.stack.remove(self.count))
